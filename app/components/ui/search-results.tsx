@@ -4,7 +4,7 @@ interface SearchResult {
   url: string;
   title: string;
   content: string;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }
 
 interface SearchResultsProps {

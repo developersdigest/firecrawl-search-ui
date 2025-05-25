@@ -39,7 +39,7 @@ export function SearchProcess({ steps, currentStep }: SearchProcessProps) {
                 <Search className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                 <div>
                   <p className="text-sm font-medium text-purple-900 dark:text-purple-100">Search Query</p>
-                  <p className="text-sm text-purple-700 dark:text-purple-300 mt-1">"{step.content}"</p>
+                  <p className="text-sm text-purple-700 dark:text-purple-300 mt-1">&quot;{step.content}&quot;</p>
                 </div>
               </div>
             )}

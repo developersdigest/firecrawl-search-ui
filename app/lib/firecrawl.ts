@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import FirecrawlApp from '@mendable/firecrawl-js';
 
 export class FirecrawlClient {
@@ -17,10 +18,14 @@ export class FirecrawlClient {
         formats: ['markdown', 'html'],
       });
       
+      if ('success' in result && !result.success) {
+        throw new Error(result.error || 'Scrape failed');
+      }
+      
       return {
-        markdown: result.markdown,
-        html: result.html,
-        metadata: result.metadata || {},
+        markdown: (result as any).markdown || '',
+        html: (result as any).html || '',
+        metadata: (result as any).metadata || {},
       };
     } catch (error) {
       console.error('Firecrawl scrape error:', error);
@@ -35,9 +40,13 @@ export class FirecrawlClient {
         limit: options?.limit || 10,
       });
       
+      if ('success' in result && !result.success) {
+        throw new Error((result as any).error || 'Map failed');
+      }
+      
       return {
-        links: result.links || [],
-        metadata: result.metadata || {},
+        links: (result as any).links || [],
+        metadata: (result as any).metadata || {},
       };
     } catch (error) {
       console.error('Firecrawl map error:', error);

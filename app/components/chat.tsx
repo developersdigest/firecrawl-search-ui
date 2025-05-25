@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { readStreamableValue } from 'ai/rsc';
 import { streamChat } from '@/app/actions/chat';
 import { Send, Loader2, Search, Globe, Brain, Sparkles } from 'lucide-react';
 

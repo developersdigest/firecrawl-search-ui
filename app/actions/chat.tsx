@@ -8,7 +8,6 @@ import { FirecrawlClient } from '@/app/lib/firecrawl';
 import { LoadingCard } from '@/app/components/ui/loading-card';
 import { WeatherCard } from '@/app/components/ui/weather-card';
 import { ArticleCard } from '@/app/components/ui/article-card';
-import { SearchResults } from '@/app/components/ui/search-results';
 import { ThinkingTrace } from '@/app/components/ui/thinking-trace';
 import { SearchProcess } from '@/app/components/ui/search-process-simple';
 import { SummaryCard } from '@/app/components/ui/summary-card';
@@ -57,24 +56,32 @@ After searching or analyzing, always summarize the findings and provide your own
           limit: z.number().optional().default(5).describe('Number of results per search'),
         }),
         generate: async function* ({ query, limit }) {
-          const iterations = [];
-          const allSources = [];
-          let overallConfidence = 0;
-          const maxIterations = 3;
-          
-          // Initial yield with thinking phase
-          yield (
-            <AgenticSearch
-              request={query}
-              iterations={iterations}
-              isSearching={true}
-              currentPhase="thinking"
-            />
-          );
-          
-          await new Promise(resolve => setTimeout(resolve, 500));
-          
-          const firecrawl = new FirecrawlClient();
+          try {
+            interface SearchIteration {
+              query: string;
+              sources: Array<{url: string; title: string; scraped?: boolean}>;
+              bulletPoints: string[];
+              confidence: number;
+              reasoning: string;
+            }
+            const iterations: SearchIteration[] = [];
+            const allSources: Array<{url: string; title: string; scraped?: boolean}> = [];
+            let overallConfidence = 0;
+            const maxIterations = 3;
+            
+            // Initial yield with thinking phase
+            yield (
+              <AgenticSearch
+                request={query}
+                iterations={iterations}
+                isSearching={true}
+                currentPhase="thinking"
+              />
+            );
+            
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            const firecrawl = new FirecrawlClient();
           
           // Analyze the request first
           const requestAnalysis = await generateText({
@@ -97,7 +104,7 @@ TYPE: [article/news/documentation/general]`,
           
           // Research loop
           for (let iteration = 0; iteration < maxIterations && overallConfidence < 85; iteration++) {
-            const iterationData = {
+            const iterationData: SearchIteration = {
               query: currentQuery,
               sources: [],
               bulletPoints: [],
@@ -350,7 +357,7 @@ Provide a clear, well-structured response that directly answers the request. Wri
           }
           
           } catch (error) {
-            return <div className="text-red-500">Search failed: {error.message}</div>;
+            return <div className="text-red-500">Search failed: {error instanceof Error ? error.message : 'Unknown error'}</div>;
           }
         },
       },
@@ -468,7 +475,7 @@ KEY POINTS:
               </div>
             );
           } catch (error) {
-            return <div className="text-red-500">Failed to analyze: {error.message}</div>;
+            return <div className="text-red-500">Failed to analyze: {error instanceof Error ? error.message : 'Unknown error'}</div>;
           }
         },
       },

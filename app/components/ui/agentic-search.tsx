@@ -1,4 +1,4 @@
-import { Search, Globe, Brain, ChevronDown, ChevronRight, ExternalLink, Sparkles, AlertCircle } from 'lucide-react';
+import { Search, Globe, Brain, ChevronRight, ExternalLink, Sparkles } from 'lucide-react';
 
 interface SearchIteration {
   query: string;
@@ -58,7 +58,7 @@ export function AgenticSearch({
                   <Globe className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                 </div>
                 <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                  Search #{index + 1}: <span className="text-purple-600 dark:text-purple-400">"{iteration.query}"</span>
+                  Search #{index + 1}: <span className="text-purple-600 dark:text-purple-400">&quot;{iteration.query}&quot;</span>
                 </span>
               </div>
 
